@@ -15,7 +15,8 @@ static const char * progname = "test_tiffxx";
 
 static void Usage(int status=0) 
 {
-	cout << "Usage: " << progname << " file.tif\n";
+	cout << "Usage: " << progname << " file.tif [file.root]\n"
+         << "\nConvert a TIFF file written by the RayCi software to\na ROOT 2D histogram (TH2F) and write it to ROOT file.\n";
 	exit(status);
 }
 
@@ -33,6 +34,8 @@ int main(int argc, char* argv[])
 	if (argc < 2) Usage();
 
 	const char* filename = argv[1];
+    const char* outfilename = 0;
+    if(argc>2) outfilename = argv[2];
 
 	//Open TIFF file
     TIFF* tif = TIFFOpen(filename, "r");
@@ -94,9 +97,15 @@ int main(int argc, char* argv[])
     _TIFFfree(buf);
     TIFFClose(tif);
     
-	TString rootFilename(filename);
-	rootFilename.ReplaceAll(".tif",".root");
-	rootFilename.ReplaceAll("#","N");
+    TString rootFilename;
+    if (outfilename) 
+        rootFilename = outfilename;
+    else
+        rootFilename = filename;
+	    rootFilename.ReplaceAll("#","N");
+	    rootFilename.ReplaceAll(".tif",".root");
+        if (rootFilename==filename)
+            rootFilename += ".root";
 
 	himg->SaveAs(rootFilename);
 
