@@ -11,7 +11,7 @@ using std::endl;
 using std::cout;
 using std::cerr;
 
-static const char * progname = "test_tiffxx";
+static const char * progname = "tiff2root";
 
 static void Usage(int status=0) 
 {
